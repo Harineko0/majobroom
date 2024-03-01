@@ -4,24 +4,17 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.majobroom.MajoBroom;
 import net.fabricmc.majobroom.armors.BaseArmor;
-import net.fabricmc.majobroom.armors.MajoWearableModel;
 import net.fabricmc.majobroom.config.MajoBroomConfig;
-import net.fabricmc.majobroom.sound.BroomFlyingSound;
 import net.fabricmc.majobroom.sound.BroomFlyingSoundWrapper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.item.Item;
-import net.minecraft.network.packet.c2s.play.VehicleMoveC2SPacket;
-import net.minecraft.network.packet.s2c.play.VehicleMoveS2CPacket;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
@@ -70,7 +63,7 @@ public class BroomEntity extends BoatEntity {
     }
 
     @Override
-    public void updatePassengerPosition(Entity passenger) {
+    public void updatePassengerPosition(Entity passenger, PositionUpdater positionUpdater) {
         super.updatePassengerPosition(passenger);
         passenger.setPosition(passenger.getX(),passenger.getY()+0.6 +floatingValue,passenger.getZ());
     }
@@ -79,7 +72,7 @@ public class BroomEntity extends BoatEntity {
     private void clientTick(){
 
         if (passenger != null){
-            if ((!this.hasPassengers()) && this.world.isClient && MinecraftClient.getInstance().player.getId() == passenger.getId()){
+            if ((!this.hasPassengers()) && this.getWorld().isClient && MinecraftClient.getInstance().player.getId() == passenger.getId()){
                 if(MajoBroomConfig.getInstance().autoThirdPersonView) {
                     MinecraftClient.getInstance().options.setPerspective(Perspective.FIRST_PERSON);
                 }
@@ -120,7 +113,7 @@ public class BroomEntity extends BoatEntity {
 
 
 
-        if (this.world.isClient()){
+        if (this.getWorld().isClient()){
             clientTick();
             updateKeys();
             if(this.hasPassengers() && MinecraftClient.getInstance().player.getId() == this.getFirstPassenger().getId()){
@@ -239,7 +232,7 @@ public class BroomEntity extends BoatEntity {
 
             return ActionResult.PASS;
         } else {
-            if (!this.world.isClient) {
+            if (!this.getWorld().isClient) {
                 return player.startRiding(this) ? ActionResult.CONSUME : ActionResult.PASS;
             } else {
 
