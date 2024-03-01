@@ -4,7 +4,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.majobroom.entity.BroomEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.server.MinecraftServer;
 
 public class BroomFlyingSoundWrapper {
     private BroomEntity attachedInstance;
@@ -14,19 +13,19 @@ public class BroomFlyingSoundWrapper {
     }
 
     public void stop() {
-         if(attachedInstance.world.isClient){
+         if(attachedInstance.getWorld().isClient){
              stop0();
          }
     }
 
     public void play() {
-        if(attachedInstance.world.isClient){
+        if(attachedInstance.getWorld().isClient){
             play0();
         }
     }
 
     public void tick() {
-        if(attachedInstance.world.isClient){
+        if(attachedInstance.getWorld().isClient){
             tick0();
         }
     }
