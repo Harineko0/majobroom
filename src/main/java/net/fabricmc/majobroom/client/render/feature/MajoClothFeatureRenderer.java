@@ -1,12 +1,16 @@
 package net.fabricmc.majobroom.client.render.feature;
 
-import com.google.common.collect.Maps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.majobroom.MajoBroom;
+import net.fabricmc.majobroom.armors.BaseArmor;
+import net.fabricmc.majobroom.armors.MajoWearableModel;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.Dilation;
-import net.minecraft.client.render.*;
-import net.minecraft.client.render.entity.feature.FeatureRenderer;
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.ArmorFeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
@@ -14,16 +18,11 @@ import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.fabricmc.majobroom.armors.MajoWearableModel;
-import net.fabricmc.majobroom.armors.BaseArmor;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.DyeableArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public class MajoClothFeatureRenderer<T extends LivingEntity, M extends BipedEntityModel<T>, A extends BipedEntityModel<T>> extends ArmorFeatureRenderer<T, M,A> {
@@ -31,7 +30,7 @@ public class MajoClothFeatureRenderer<T extends LivingEntity, M extends BipedEnt
     private static MajoWearableModel cloth = null;
     private static MajoWearableModel foot = null;
     public MajoClothFeatureRenderer(FeatureRendererContext<T, M> context, A leggingsModel, A bodyModel) {
-        super(context, leggingsModel, bodyModel);
+        super(context, leggingsModel, bodyModel, MinecraftClient.getInstance().getBakedModelManager());
     }
     @Override
     public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light, T livingEntity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
